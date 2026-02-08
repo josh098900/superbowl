@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dashboard-bg: #0f172a;
+  --color-seahawks-navy: #002244;
+  --color-seahawks-green: #69BE28;
+  --color-patriots-navy: #002244;
+  --color-patriots-red: #C60C30;
+  --color-patriots-silver: #B0B7BC;
+  --color-gold-accent: #fbbf24;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-dashboard-bg);
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+}

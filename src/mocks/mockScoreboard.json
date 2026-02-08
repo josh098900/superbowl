@@ -1,0 +1,58 @@
+{
+  "leagues": [
+    {
+      "id": "28",
+      "name": "National Football League",
+      "abbreviation": "NFL"
+    }
+  ],
+  "season": {
+    "type": 3,
+    "year": 2025
+  },
+  "events": [
+    {
+      "id": "401654321",
+      "uid": "s:20~l:28~e:401654321",
+      "date": "2026-02-08T23:30Z",
+      "name": "Super Bowl LX - Seattle Seahawks vs New England Patriots",
+      "shortName": "SEA vs NE",
+      "season": { "year": 2025, "type": 3 },
+      "competitions": [
+        {
+          "id": "401654321",
+          "date": "2026-02-08T23:30Z",
+          "competitors": [
+            {
+              "id": "17",
+              "homeAway": "home",
+              "team": {
+                "id": "17",
+                "abbreviation": "NE",
+                "displayName": "New England Patriots",
+                "logos": [{ "href": "https://a.espncdn.com/i/teamlogos/nfl/500/ne.png" }]
+              },
+              "score": "10"
+            },
+            {
+              "id": "26",
+              "homeAway": "away",
+              "team": {
+                "id": "26",
+                "abbreviation": "SEA",
+                "displayName": "Seattle Seahawks",
+                "logos": [{ "href": "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png" }]
+              },
+              "score": "14"
+            }
+          ],
+          "status": {
+            "type": { "name": "STATUS_IN_PROGRESS" },
+            "period": 2,
+            "displayClock": "7:23"
+          }
+        }
+      ]
+    }
+  ]
+}
