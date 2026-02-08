@@ -11,7 +11,7 @@ const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 /**
  * Returns the appropriate polling interval based on game status.
- * - Live quarters/overtime: 5000ms
+ * - Live quarters/overtime: 10000ms
  * - Pregame/halftime: 30000ms
  * - Final: false (stop polling)
  */
@@ -22,7 +22,7 @@ export function getPollingInterval(gameStatus) {
     case 'q3':
     case 'q4':
     case 'overtime':
-      return 5000;
+      return 10000;
     case 'pregame':
     case 'halftime':
       return 30000;

@@ -94,7 +94,7 @@ describe('Property 1: Event ID extraction from any scoreboard response', () => {
  * Property 3: Polling interval matches game status
  *
  * For any GameStatus value, the polling interval returned by getPollingInterval shall be:
- * 5000ms when status is q1, q2, q3, q4, or overtime;
+ * 10000ms when status is q1, q2, q3, q4, or overtime;
  * 30000ms when status is pregame or halftime;
  * false (disabled) when status is final.
  *
@@ -112,10 +112,10 @@ describe('Property 3: Polling interval matches game status', () => {
   const liveStatuses = fc.constantFrom('q1', 'q2', 'q3', 'q4', 'overtime');
   const slowStatuses = fc.constantFrom('pregame', 'halftime');
 
-  it('returns 5000ms for live game statuses (q1, q2, q3, q4, overtime)', () => {
+  it('returns 10000ms for live game statuses (q1, q2, q3, q4, overtime)', () => {
     fc.assert(
       fc.property(liveStatuses, (status) => {
-        expect(getPollingInterval(status)).toBe(5000);
+        expect(getPollingInterval(status)).toBe(10000);
       }),
       { numRuns: 100 }
     );
