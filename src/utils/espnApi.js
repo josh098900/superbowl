@@ -6,6 +6,8 @@ const SCOREBOARD_URL =
   'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
 const SUMMARY_URL =
   'https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary';
+const NEWS_URL =
+  'https://site.api.espn.com/apis/site/v2/sports/football/nfl/news';
 
 const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
@@ -170,8 +172,14 @@ export function normalizeGameData(rawData) {
   // Current drive
   const currentDrive = normalizeDrive(drives);
 
+  // Drive history
+  const driveHistory = normalizeDriveHistory(drives);
+
   // Quarter scores
   const quarterScores = normalizeQuarterScores(competitors);
+
+  // Game info: venue, broadcast, leaders
+  const gameInfo = normalizeGameInfo(rawData, competition);
 
   return {
     gameStatus,
@@ -182,7 +190,9 @@ export function normalizeGameData(rawData) {
     teamStats,
     winProbability,
     currentDrive,
+    driveHistory,
     quarterScores,
+    gameInfo,
   };
 }
 
@@ -190,7 +200,7 @@ export function normalizeGameData(rawData) {
  * Extracts player stats from boxscore for QB, WR, RB comparisons.
  */
 function normalizePlayerStats(boxscore) {
-  const defaultLine = { name: 'N/A', team: '', stats: {} };
+  const defaultLine = { name: 'N/A', team: '', headshot: '', position: '', stats: {} };
   const result = {
     qb: { home: { ...defaultLine }, away: { ...defaultLine } },
     wr: { home: { ...defaultLine }, away: { ...defaultLine } },
@@ -214,6 +224,8 @@ function normalizePlayerStats(boxscore) {
         result.qb[side] = {
           name: a.athlete?.displayName || 'N/A',
           team: teamAbbr,
+          headshot: a.athlete?.headshot?.href || a.athlete?.headshot || '',
+          position: 'QB',
           stats: {
             completionsAttempts: s[0] || '0/0',
             yards: parseInt(s[1] || '0', 10),
@@ -230,6 +242,8 @@ function normalizePlayerStats(boxscore) {
         result.wr[side] = {
           name: a.athlete?.displayName || 'N/A',
           team: teamAbbr,
+          headshot: a.athlete?.headshot?.href || a.athlete?.headshot || '',
+          position: 'WR',
           stats: {
             receptions: parseInt(s[0] || '0', 10),
             yards: parseInt(s[1] || '0', 10),
@@ -245,6 +259,8 @@ function normalizePlayerStats(boxscore) {
         result.rb[side] = {
           name: a.athlete?.displayName || 'N/A',
           team: teamAbbr,
+          headshot: a.athlete?.headshot?.href || a.athlete?.headshot || '',
+          position: 'RB',
           stats: {
             carries: parseInt(s[0] || '0', 10),
             yards: parseInt(s[1] || '0', 10),
@@ -322,6 +338,117 @@ function normalizeDrive(drives) {
     yardLine: current.start?.yardLine || 0,
     isActive: current.isComplete === false || current.isComplete === undefined,
     result: current.result || null,
+  };
+}
+
+/**
+ * Fetches NFL news from ESPN, filtered for Super Bowl content.
+ */
+export async function fetchNews() {
+  if (USE_MOCK_DATA) {
+    return [
+      {
+        headline: 'Super Bowl LX Preview: Seahawks vs Patriots',
+        description: 'A look at the key matchups heading into the big game.',
+        image: 'https://a.espncdn.com/photo/2025/0207/superbowl_preview.jpg',
+        link: 'https://www.espn.com',
+        published: new Date().toISOString(),
+      },
+      {
+        headline: 'Sam Darnold Ready for Biggest Stage',
+        description: 'The Seahawks QB discusses his journey to the Super Bowl.',
+        image: 'https://a.espncdn.com/photo/2025/0207/darnold_presser.jpg',
+        link: 'https://www.espn.com',
+        published: new Date().toISOString(),
+      },
+      {
+        headline: 'Patriots Defense Aims to Contain Seahawks Offense',
+        description: 'New England\'s game plan focuses on stopping the run.',
+        image: 'https://a.espncdn.com/photo/2025/0207/pats_defense.jpg',
+        link: 'https://www.espn.com',
+        published: new Date().toISOString(),
+      },
+    ];
+  }
+  const { data } = await axios.get(NEWS_URL);
+  const articles = data?.articles || [];
+  return articles
+    .filter((a) => {
+      const text = `${a.headline || ''} ${a.description || ''}`.toLowerCase();
+      return text.includes('super bowl') || text.includes('seahawks') || text.includes('patriots');
+    })
+    .slice(0, 10)
+    .map((a) => ({
+      headline: a.headline || '',
+      description: a.description || '',
+      image: a.images?.[0]?.url || '',
+      link: a.links?.web?.href || a.links?.api?.news?.href || 'https://www.espn.com',
+      published: a.published || '',
+    }));
+}
+
+/**
+ * Extracts drive history from completed drives.
+ */
+function normalizeDriveHistory(drives) {
+  const previous = drives?.previous || [];
+  return previous.map((drive) => ({
+    team: drive.team?.abbreviation || '',
+    plays: drive.plays?.length || drive.offensivePlays || 0,
+    yards: drive.yards || 0,
+    timeElapsed: drive.timeElapsed?.displayValue || '0:00',
+    result: drive.result || drive.displayResult || '',
+    startYardLine: drive.start?.yardLine || 0,
+    endYardLine: drive.end?.yardLine || 0,
+    quarter: drive.start?.period?.number || 0,
+  }));
+}
+
+/**
+ * Extracts game info: venue, broadcast, and leaders.
+ */
+function normalizeGameInfo(rawData, competition) {
+  // Venue
+  const gameInfo = rawData?.gameInfo;
+  const venue = gameInfo?.venue || competition?.venue || {};
+  const venueName = venue.fullName || venue.shortName || '';
+  const venueCity = venue.address?.city || '';
+  const venueState = venue.address?.state || '';
+  const venueLocation = [venueCity, venueState].filter(Boolean).join(', ');
+
+  // Broadcast
+  const broadcasts = competition?.broadcasts || [];
+  const broadcastNames = broadcasts
+    .flatMap((b) => b.names || [b.name])
+    .filter(Boolean);
+  const broadcast = broadcastNames[0] || '';
+
+  // Leaders (pregame/live stat leaders)
+  const leaders = [];
+  const rawLeaders = rawData?.leaders || competition?.leaders || [];
+  rawLeaders.forEach((category) => {
+    const catName = category.name || category.displayName || '';
+    const topLeader = category.leaders?.[0];
+    if (topLeader) {
+      leaders.push({
+        category: catName,
+        name: topLeader.athlete?.displayName || topLeader.displayName || '',
+        team: topLeader.team?.abbreviation || '',
+        headshot: topLeader.athlete?.headshot?.href || topLeader.athlete?.headshot || '',
+        value: topLeader.displayValue || topLeader.value || '',
+      });
+    }
+  });
+
+  // Attendance & officials
+  const attendance = gameInfo?.attendance || null;
+
+  return {
+    venue: venueName,
+    venueLocation,
+    broadcast,
+    leaders,
+    attendance,
   };
 }
 

@@ -77,16 +77,16 @@ export function useGameData() {
 
   const defaultPlayerStats = {
     qb: {
-      home: { name: 'N/A', team: '', stats: {} },
-      away: { name: 'N/A', team: '', stats: {} },
+      home: { name: 'N/A', team: '', headshot: '', position: 'QB', stats: {} },
+      away: { name: 'N/A', team: '', headshot: '', position: 'QB', stats: {} },
     },
     wr: {
-      home: { name: 'N/A', team: '', stats: {} },
-      away: { name: 'N/A', team: '', stats: {} },
+      home: { name: 'N/A', team: '', headshot: '', position: 'WR', stats: {} },
+      away: { name: 'N/A', team: '', headshot: '', position: 'WR', stats: {} },
     },
     rb: {
-      home: { name: 'N/A', team: '', stats: {} },
-      away: { name: 'N/A', team: '', stats: {} },
+      home: { name: 'N/A', team: '', headshot: '', position: 'RB', stats: {} },
+      away: { name: 'N/A', team: '', headshot: '', position: 'RB', stats: {} },
     },
   };
 
@@ -111,7 +111,9 @@ export function useGameData() {
     teamStats: normalized?.teamStats ?? defaultTeamStats,
     winProbability: winProbAccumulatorRef.current,
     currentDrive: normalized?.currentDrive ?? null,
+    driveHistory: normalized?.driveHistory ?? [],
     quarterScores: normalized?.quarterScores ?? { quarters: [] },
+    gameInfo: normalized?.gameInfo ?? { venue: '', venueLocation: '', broadcast: '', leaders: [], attendance: null },
     isLoading: scoreboardQuery.isLoading || summaryQuery.isLoading,
     isError: scoreboardQuery.isError || summaryQuery.isError,
     consecutiveErrors: consecutiveErrorsRef.current,

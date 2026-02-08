@@ -5,13 +5,13 @@ const PREDICTIONS = [
   { label: 'First TD', predicted: 'Zach Charbonnet' },
 ];
 
-export default function PredictionCard({ gameStatus, scores, playerStats }) {
+export default function PredictionCard({ gameStatus, scores, playerStats, plays }) {
   const isLive = gameStatus !== 'pregame';
 
   const predictions = PREDICTIONS.map((p) => ({
     ...p,
-    actual: isLive ? getActual(p.label, scores, playerStats) : null,
-    isCorrect: isLive ? checkCorrect(p.label, scores, playerStats) : null,
+    actual: isLive ? getActual(p.label, scores, playerStats, plays, gameStatus) : null,
+    isCorrect: isLive ? checkCorrect(p.label, scores, plays, gameStatus) : null,
   }));
 
   return (
@@ -57,29 +57,67 @@ function Indicator({ isCorrect }) {
   );
 }
 
-function getActual(label, scores, playerStats) {
+function getActual(label, scores, playerStats, plays, gameStatus) {
   if (!scores) return null;
   switch (label) {
     case 'Final Score':
       return `SEA ${scores.away?.score ?? '?'}, NE ${scores.home?.score ?? '?'}`;
     case 'Total Points':
       return String((scores.away?.score ?? 0) + (scores.home?.score ?? 0));
+    case 'First TD': {
+      const firstTD = findFirstTouchdown(plays);
+      return firstTD || (gameStatus === 'final' ? 'Unknown' : null);
+    }
     case 'MVP':
-    case 'First TD':
       return null;
     default:
       return null;
   }
 }
 
-function checkCorrect(label, scores) {
+function checkCorrect(label, scores, plays, gameStatus) {
   if (!scores) return null;
   switch (label) {
     case 'Total Points': {
       const total = (scores.away?.score ?? 0) + (scores.home?.score ?? 0);
-      return total === 47 ? true : total > 47 ? false : null;
+      if (gameStatus === 'final') return total === 47;
+      return total > 47 ? false : null;
+    }
+    case 'Final Score': {
+      if (gameStatus !== 'final') return null;
+      const awayScore = scores.away?.score ?? 0;
+      const homeScore = scores.home?.score ?? 0;
+      return awayScore === 27 && homeScore === 20;
+    }
+    case 'First TD': {
+      const firstTD = findFirstTouchdown(plays);
+      if (!firstTD) return null;
+      return firstTD.toLowerCase().includes('charbonnet');
     }
     default:
       return null;
   }
+}
+
+/**
+ * Finds the scorer of the first touchdown from the play-by-play data.
+ * Looks for the first scoring play with "TOUCHDOWN" in the description.
+ */
+function findFirstTouchdown(plays) {
+  if (!plays || plays.length === 0) return null;
+  const tdPlay = plays.find(
+    (p) => p.isScoring && p.description.toLowerCase().includes('touchdown')
+  );
+  if (!tdPlay) return null;
+  // Try to extract the player name from the description
+  // Common patterns: "Player for X yards TOUCHDOWN", "Player pass to Receiver TOUCHDOWN"
+  const desc = tdPlay.description;
+  // Look for "to PlayerName" pattern (pass plays)
+  const passMatch = desc.match(/(?:pass.*?to|complete to)\s+([A-Z][\w.''-]+(?:\s+[A-Z][\w.''-]+)*)/i);
+  if (passMatch) return passMatch[1];
+  // Look for "PlayerName up the middle/left end/right tackle" pattern (rush plays)
+  const rushMatch = desc.match(/^([A-Z][\w.''-]+(?:\s+[A-Z][\w.''-]+)*)\s+(?:up|left|right|middle)/i);
+  if (rushMatch) return rushMatch[1];
+  // Fallback: return the team abbreviation
+  return tdPlay.team ? `${tdPlay.team} player` : null;
 }

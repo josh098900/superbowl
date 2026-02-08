@@ -50,7 +50,7 @@
             "name": "passing",
             "athletes": [
               {
-                "athlete": { "displayName": "Drake Maye" },
+                "athlete": { "displayName": "Drake Maye", "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4567048.png" } },
                 "stats": ["14/22", "187", "8.5", "1", "1", "0", "0", "89.2"]
               }
             ]
@@ -59,7 +59,7 @@
             "name": "rushing",
             "athletes": [
               {
-                "athlete": { "displayName": "Rhamondre Stevenson" },
+                "athlete": { "displayName": "Rhamondre Stevenson", "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4361411.png" } },
                 "stats": ["11", "48", "4.4", "1", "22", "0"]
               }
             ]
@@ -68,7 +68,7 @@
             "name": "receiving",
             "athletes": [
               {
-                "athlete": { "displayName": "DeMario Douglas" },
+                "athlete": { "displayName": "DeMario Douglas", "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4569618.png" } },
                 "stats": ["5", "67", "13.4", "0", "0", "7"]
               }
             ]
@@ -83,7 +83,7 @@
             "name": "passing",
             "athletes": [
               {
-                "athlete": { "displayName": "Sam Darnold" },
+                "athlete": { "displayName": "Sam Darnold", "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/3912547.png" } },
                 "stats": ["16/24", "212", "8.8", "2", "0", "0", "0", "121.5"]
               }
             ]
@@ -92,7 +92,7 @@
             "name": "rushing",
             "athletes": [
               {
-                "athlete": { "displayName": "Zach Charbonnet" },
+                "athlete": { "displayName": "Zach Charbonnet", "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4426354.png" } },
                 "stats": ["9", "52", "5.8", "0", "18", "0"]
               }
             ]
@@ -101,7 +101,7 @@
             "name": "receiving",
             "athletes": [
               {
-                "athlete": { "displayName": "Jaxon Smith-Njigba" },
+                "athlete": { "displayName": "Jaxon Smith-Njigba", "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4567258.png" } },
                 "stats": ["7", "98", "14.0", "1", "0", "9"]
               }
             ]
@@ -287,6 +287,109 @@
       "start": { "down": 1, "distance": 10, "yardLine": 43 },
       "isComplete": false,
       "result": null
+    },
+    "previous": [
+      {
+        "team": { "abbreviation": "SEA" },
+        "plays": [{ "id": "1001" }, { "id": "1002" }, { "id": "1003" }],
+        "yards": 75,
+        "timeElapsed": { "displayValue": "2:17" },
+        "result": "Touchdown",
+        "start": { "yardLine": 25, "period": { "number": 1 } },
+        "end": { "yardLine": 0 }
+      },
+      {
+        "team": { "abbreviation": "NE" },
+        "plays": [{ "id": "1004" }, { "id": "1005" }, { "id": "1006" }],
+        "yards": 75,
+        "timeElapsed": { "displayValue": "1:50" },
+        "result": "Touchdown",
+        "start": { "yardLine": 25, "period": { "number": 1 } },
+        "end": { "yardLine": 0 }
+      },
+      {
+        "team": { "abbreviation": "SEA" },
+        "plays": [{ "id": "1007" }, { "id": "1008" }, { "id": "1009" }],
+        "yards": 75,
+        "timeElapsed": { "displayValue": "1:50" },
+        "result": "Touchdown",
+        "start": { "yardLine": 25, "period": { "number": 2 } },
+        "end": { "yardLine": 0 }
+      },
+      {
+        "team": { "abbreviation": "NE" },
+        "plays": [{ "id": "1010" }, { "id": "1011" }],
+        "yards": 0,
+        "timeElapsed": { "displayValue": "0:52" },
+        "result": "Punt",
+        "start": { "yardLine": 35, "period": { "number": 2 } },
+        "end": { "yardLine": 20 }
+      },
+      {
+        "team": { "abbreviation": "NE" },
+        "plays": [{ "id": "1014" }, { "id": "1015" }],
+        "yards": 35,
+        "timeElapsed": { "displayValue": "1:15" },
+        "result": "Field Goal",
+        "start": { "yardLine": 40, "period": { "number": 2 } },
+        "end": { "yardLine": 20 }
+      }
+    ]
+  },
+  "gameInfo": {
+    "venue": {
+      "fullName": "Levi's Stadium",
+      "shortName": "Levi's Stadium",
+      "address": {
+        "city": "Santa Clara",
+        "state": "CA"
+      },
+      "capacity": 68500
+    },
+    "attendance": 68500
+  },
+  "leaders": [
+    {
+      "name": "passingYards",
+      "displayName": "Passing Yards",
+      "leaders": [
+        {
+          "athlete": {
+            "displayName": "Sam Darnold",
+            "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/3912547.png" }
+          },
+          "team": { "abbreviation": "SEA" },
+          "displayValue": "212 YDS, 2 TD"
+        }
+      ]
+    },
+    {
+      "name": "rushingYards",
+      "displayName": "Rushing Yards",
+      "leaders": [
+        {
+          "athlete": {
+            "displayName": "Zach Charbonnet",
+            "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4426354.png" }
+          },
+          "team": { "abbreviation": "SEA" },
+          "displayValue": "52 YDS"
+        }
+      ]
+    },
+    {
+      "name": "receivingYards",
+      "displayName": "Receiving Yards",
+      "leaders": [
+        {
+          "athlete": {
+            "displayName": "Jaxon Smith-Njigba",
+            "headshot": { "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4567258.png" }
+          },
+          "team": { "abbreviation": "SEA" },
+          "displayValue": "98 YDS, 1 TD"
+        }
+      ]
     }
-  }
+  ]
 }

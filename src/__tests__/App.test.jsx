@@ -20,6 +20,11 @@ vi.mock('recharts', () => ({
   Legend: () => null,
 }));
 
+// Mock NewsCarousel to avoid QueryClientProvider requirement
+vi.mock('../components/NewsCarousel', () => ({
+  default: () => React.createElement('div', { 'data-testid': 'news-carousel' }, 'News'),
+}));
+
 import { useGameData } from '../hooks/useGameData';
 import App from '../App';
 
@@ -54,6 +59,8 @@ function makeGameData(overrides = {}) {
     winProbability: [],
     currentDrive: null,
     quarterScores: { quarters: [] },
+    driveHistory: [],
+    gameInfo: { venue: '', venueLocation: '', broadcast: '', leaders: [], attendance: null },
     isLoading: false,
     isError: false,
     consecutiveErrors: 0,

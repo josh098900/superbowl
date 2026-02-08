@@ -14,6 +14,10 @@ import PredictionCard from './components/PredictionCard';
 import PropTracker from './components/PropTracker';
 import StadiumBackground from './components/StadiumBackground';
 import AnimatedCard from './components/AnimatedCard';
+import PlayerCarousel from './components/PlayerCarousel';
+import NewsCarousel from './components/NewsCarousel';
+import GameLeaders from './components/GameLeaders';
+import DriveHistory from './components/DriveHistory';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -32,7 +36,9 @@ function App() {
     teamStats,
     winProbability,
     currentDrive,
+    driveHistory,
     quarterScores,
+    gameInfo,
     isLoading,
     consecutiveErrors,
   } = useGameData();
@@ -65,7 +71,20 @@ function App() {
 
         {/* Header / Jumbotron */}
         <div className="mb-8">
-          <LiveScore scores={scores} clock={clock} gameStatus={gameStatus} />
+          <LiveScore scores={scores} clock={clock} gameStatus={gameStatus} gameInfo={gameInfo} />
+        </div>
+
+        {/* Carousels Strip */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <AnimatedCard delay={150}>
+            <PlayerCarousel playerStats={playerStats} scores={scores} />
+          </AnimatedCard>
+          <AnimatedCard delay={200}>
+            <GameLeaders leaders={gameInfo.leaders} />
+          </AnimatedCard>
+          <AnimatedCard delay={250}>
+            <NewsCarousel />
+          </AnimatedCard>
         </div>
 
         {/* Dashboard Grid */}
@@ -76,11 +95,14 @@ function App() {
             <AnimatedCard delay={200}>
               <DriveTracker currentDrive={currentDrive} />
             </AnimatedCard>
+            <AnimatedCard delay={250}>
+              <DriveHistory driveHistory={driveHistory} />
+            </AnimatedCard>
             <AnimatedCard delay={400}>
               <WinProbability winProbability={winProbability} />
             </AnimatedCard>
             <AnimatedCard delay={550}>
-              <PredictionCard gameStatus={gameStatus} scores={scores} playerStats={playerStats} />
+              <PredictionCard gameStatus={gameStatus} scores={scores} playerStats={playerStats} plays={plays} />
             </AnimatedCard>
           </div>
 

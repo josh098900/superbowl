@@ -33,7 +33,7 @@ describe('Property 14: Prediction tracking indicators', () => {
     fc.assert(
       fc.property(scoresArb, (scores) => {
         const { container } = render(
-          <PredictionCard gameStatus="pregame" scores={scores} playerStats={{}} />
+          <PredictionCard gameStatus="pregame" scores={scores} playerStats={{}} plays={[]} />
         );
         const pendingDots = container.querySelectorAll('[data-testid="indicator-pending"]');
         // All 4 predictions should be pending during pregame
@@ -47,6 +47,7 @@ describe('Property 14: Prediction tracking indicators', () => {
 
   it('renders correct indicator when total points matches prediction', () => {
     // Total points prediction is 47, so away=27 + home=20 = 47
+    // Final score SEA 27, NE 20 also matches the prediction
     const { container } = render(
       <PredictionCard
         gameStatus="final"
@@ -55,10 +56,12 @@ describe('Property 14: Prediction tracking indicators', () => {
           away: { name: 'Seahawks', abbreviation: 'SEA', score: 27, logo: '' },
         }}
         playerStats={{}}
+        plays={[]}
       />
     );
     const correctDots = container.querySelectorAll('[data-testid="indicator-correct"]');
-    expect(correctDots.length).toBeGreaterThanOrEqual(1);
+    // Total Points (47) + Final Score (SEA 27, NE 20) should both be correct
+    expect(correctDots.length).toBeGreaterThanOrEqual(2);
   });
 
   it('renders incorrect indicator when total points exceeds prediction', () => {
@@ -70,6 +73,7 @@ describe('Property 14: Prediction tracking indicators', () => {
           away: { name: 'Seahawks', abbreviation: 'SEA', score: 30, logo: '' },
         }}
         playerStats={{}}
+        plays={[]}
       />
     );
     const incorrectDots = container.querySelectorAll('[data-testid="indicator-incorrect"]');
