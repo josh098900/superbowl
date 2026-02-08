@@ -18,6 +18,7 @@ import PlayerCarousel from './components/PlayerCarousel';
 import NewsCarousel from './components/NewsCarousel';
 import GameLeaders from './components/GameLeaders';
 import DriveHistory from './components/DriveHistory';
+import HelmetClash from './components/HelmetClash';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -131,6 +132,9 @@ function App() {
 
         </div>
       </div>
+
+      {/* Helmet Clash — cinematic battle section */}
+      <HelmetClash />
 
       {/* Connection Status */}
       <AnimatePresence>
