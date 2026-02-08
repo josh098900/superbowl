@@ -41,9 +41,19 @@ export async function fetchScoreboard() {
     ? mockScoreboard
     : (await axios.get(SCOREBOARD_URL)).data;
   const events = data?.events || [];
-  const superBowlEvent = events.find((event) =>
-    (event.name || '').toLowerCase().includes('super bowl')
-  );
+  const superBowlEvent = events.find((event) => {
+    // Check event name
+    if ((event.name || '').toLowerCase().includes('super bowl')) return true;
+    // Check competition notes (ESPN puts "Super Bowl LX" here)
+    const competitions = event.competitions || [];
+    for (const comp of competitions) {
+      const notes = comp.notes || [];
+      for (const note of notes) {
+        if ((note.headline || '').toLowerCase().includes('super bowl')) return true;
+      }
+    }
+    return false;
+  });
 
   if (!superBowlEvent) {
     throw new Error('Super Bowl LX game not found');
