@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useGameData } from './hooks/useGameData';
+import { AnimatePresence, motion } from 'framer-motion';
 import SplashScreen from './components/SplashScreen';
 import ScoringCelebration from './components/ScoringCelebration';
-import AnimatedCard from './components/AnimatedCard';
 import LiveScore from './components/LiveScore';
 import PlayByPlay from './components/PlayByPlay';
 import PlayerStats from './components/PlayerStats';
@@ -12,10 +12,15 @@ import DriveTracker from './components/DriveTracker';
 import QuarterBreakdown from './components/QuarterBreakdown';
 import PredictionCard from './components/PredictionCard';
 import PropTracker from './components/PropTracker';
+import StadiumBackground from './components/StadiumBackground';
+import AnimatedCard from './components/AnimatedCard';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const handleSplashComplete = useCallback(() => setShowSplash(false), []);
+  const handleSplashComplete = useCallback(() => {
+    setShowSplash(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
 
   const {
     eventId,
@@ -35,10 +40,11 @@ function App() {
   if (!isLoading && eventId === null) {
     return (
       <div className="min-h-screen bg-dashboard-bg text-white flex items-center justify-center">
-        <div className="text-center p-8">
-          <h1 className="text-2xl font-bold mb-4">Super Bowl LX</h1>
+        <StadiumBackground />
+        <div className="text-center p-8 relative z-10 glass-panel rounded-2xl">
+          <h1 className="text-4xl font-broadcast mb-4">Super Bowl LX</h1>
           <p className="text-gray-400" data-testid="game-not-found">
-            Super Bowl LX game not found. Please check back closer to game time.
+            Game data not found. Coverage begins soon.
           </p>
         </div>
       </div>
@@ -46,78 +52,80 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-dashboard-bg text-white relative overflow-hidden">
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+    <div className="min-h-screen text-white relative overflow-hidden font-inter selection:bg-gold-accent/30">
+      <AnimatePresence>
+        {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      </AnimatePresence>
+
       <ScoringCelebration plays={plays} />
+      <StadiumBackground />
 
-      {/* Atmospheric background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-seahawks-green/5 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-patriots-red/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold-accent/3 rounded-full blur-3xl" />
-      </div>
+      {/* Main Content */}
+      <div className="relative z-10 max-w-[1600px] mx-auto px-4 py-6">
 
-      {/* Error states */}
-      {consecutiveErrors >= 3 && (
-        <div
-          data-testid="error-banner"
-          className="relative z-10 w-full bg-red-600 text-white text-center py-2 text-sm font-semibold"
-        >
-          Unable to reach ESPN. Showing cached data.
-        </div>
-      )}
-      {consecutiveErrors > 0 && consecutiveErrors < 3 && (
-        <div
-          data-testid="error-indicator"
-          className="relative z-10 w-full text-center py-1 text-xs text-yellow-400"
-        >
-          Reconnecting to ESPN...
-        </div>
-      )}
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-4">
-        <AnimatedCard delay={100}>
+        {/* Header / Jumbotron */}
+        <div className="mb-8">
           <LiveScore scores={scores} clock={clock} gameStatus={gameStatus} />
-        </AnimatedCard>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-4">
+        {/* Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          {/* Left Column: Game State */}
+          <div className="lg:col-span-3 flex flex-col gap-6">
             <AnimatedCard delay={200}>
               <DriveTracker currentDrive={currentDrive} />
             </AnimatedCard>
             <AnimatedCard delay={400}>
               <WinProbability winProbability={winProbability} />
             </AnimatedCard>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <AnimatedCard delay={300}>
-              <PlayByPlay plays={plays} />
+            <AnimatedCard delay={550}>
+              <PredictionCard gameStatus={gameStatus} scores={scores} playerStats={playerStats} />
             </AnimatedCard>
           </div>
 
-          <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
+          {/* Center Column: Play-by-Play (Widest) */}
+          <div className="lg:col-span-6 flex flex-col gap-6">
+            <AnimatedCard delay={300}>
+              <PlayByPlay plays={plays} />
+            </AnimatedCard>
+            <AnimatedCard delay={700}>
+              <PlayerStats playerStats={playerStats} />
+            </AnimatedCard>
+          </div>
+
+          {/* Right Column: Analytics */}
+          <div className="lg:col-span-3 flex flex-col gap-6">
             <AnimatedCard delay={350}>
               <TeamStats teamStats={teamStats} />
             </AnimatedCard>
             <AnimatedCard delay={450}>
               <QuarterBreakdown quarterScores={quarterScores} />
             </AnimatedCard>
-            <AnimatedCard delay={550}>
-              <PredictionCard gameStatus={gameStatus} scores={scores} playerStats={playerStats} />
-            </AnimatedCard>
             <AnimatedCard delay={650}>
               <PropTracker teamStats={teamStats} scores={scores} plays={plays} />
             </AnimatedCard>
           </div>
-        </div>
 
-        <AnimatedCard delay={700}>
-          <div className="mt-4">
-            <PlayerStats playerStats={playerStats} />
-          </div>
-        </AnimatedCard>
+        </div>
       </div>
+
+      {/* Connection Status */}
+      <AnimatePresence>
+        {consecutiveErrors > 0 && (
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 50, opacity: 0 }}
+            data-testid={consecutiveErrors >= 3 ? "error-banner" : "reconnecting-banner"}
+            className="fixed bottom-4 right-4 z-50 px-4 py-2 rounded-lg glass-panel-heavy border-l-4 border-red-500 text-sm font-semibold"
+          >
+            {consecutiveErrors >= 3
+              ? "Connection Lost. Showing cached data."
+              : "Reconnecting..."}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

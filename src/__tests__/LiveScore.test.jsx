@@ -18,14 +18,14 @@ const gameStatusArb = fc.constantFrom(
 );
 
 const STATUS_LABELS = {
-  pregame: 'Pregame',
-  q1: 'Q1',
-  q2: 'Q2',
-  halftime: 'Halftime',
-  q3: 'Q3',
-  q4: 'Q4',
-  overtime: 'OT',
-  final: 'Final',
+  pregame: 'PREGAME',
+  q1: 'LIVE',
+  q2: 'LIVE',
+  halftime: 'HALFTIME',
+  q3: 'LIVE',
+  q4: 'LIVE',
+  overtime: 'LIVE',
+  final: 'FINAL',
 };
 
 const teamNameArb = fc.stringMatching(/^[A-Za-z ]{3,20}$/);

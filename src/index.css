@@ -1,55 +1,84 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dashboard-bg: #070b14;
-  --color-dashboard-surface: #0d1424;
-  --color-dashboard-card: #111827;
+  --color-dashboard-bg: #050a14;
+  --color-dashboard-surface: #0f172a;
+  --color-dashboard-card: #1e293b;
+  
+  /* Team Colors - Enhanced */
   --color-seahawks-navy: #002244;
   --color-seahawks-green: #69BE28;
+  --color-seahawks-neon: #82e635; /* Brighter for accents */
+  
   --color-patriots-navy: #002244;
   --color-patriots-red: #C60C30;
+  --color-patriots-neon: #ff1f4b; /* Brighter for accents */
   --color-patriots-silver: #B0B7BC;
+  
   --color-gold-accent: #fbbf24;
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+
+  /* Fonts */
+  --font-oswald: 'Oswald', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  
+  /* Animations */
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spotlight: spotlight 8s ease-in-out infinite alternate;
 }
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #070b14 0%, #0c1222 40%, #111a2e 70%, #0a1020 100%);
-  background-attachment: fixed;
+  background-color: var(--color-dashboard-bg);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.2) 0%, transparent 60%),
+    radial-gradient(circle at 100% 0%, rgba(105, 190, 40, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 0% 0%, rgba(198, 12, 48, 0.1) 0%, transparent 40%);
   color: white;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Glass card base */
-.card-glass {
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.7) 0%, rgba(30, 41, 59, 0.4) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.08);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+/* Typography Utilities */
+.font-broadcast {
+  font-family: var(--font-oswald);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Seahawks-tinted card */
-.card-seahawks {
-  background: linear-gradient(145deg, rgba(0, 34, 68, 0.3) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(105, 190, 40, 0.05) 100%);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(105, 190, 40, 0.1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+/* Glassmorphism 2.0 */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
 
-/* Patriots-tinted card */
-.card-patriots {
-  background: linear-gradient(145deg, rgba(198, 12, 48, 0.05) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(0, 34, 68, 0.3) 100%);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(198, 12, 48, 0.1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+.glass-panel-heavy {
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
-/* Gold accent card */
-.card-gold {
-  background: linear-gradient(145deg, rgba(251, 191, 36, 0.06) 0%, rgba(15, 23, 42, 0.7) 40%, rgba(30, 41, 59, 0.4) 100%);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(251, 191, 36, 0.1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+/* Neon Glows */
+.glow-seahawks {
+  box-shadow: 0 0 20px rgba(105, 190, 40, 0.3);
+}
+
+.glow-patriots {
+  box-shadow: 0 0 20px rgba(198, 12, 48, 0.3);
+}
+
+.glow-gold {
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+}
+
+/* Keyframes */
+@keyframes spotlight {
+  0% { transform: translateX(-10%) rotate(-5deg); opacity: 0.5; }
+  100% { transform: translateX(10%) rotate(5deg); opacity: 0.8; }
 }
