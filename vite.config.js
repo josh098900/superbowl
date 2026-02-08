@@ -8,10 +8,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-charts': ['recharts'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-react': ['react', 'react-dom'],
+        manualChunks(id) {
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3')) {
+            return 'vendor-charts';
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'vendor-motion';
+          }
+          if (id.includes('node_modules/react-dom')) {
+            return 'vendor-react';
+          }
         },
       },
     },
