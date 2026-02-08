@@ -61,9 +61,9 @@ describe('Property 2: LiveScore renders all game state fields', () => {
         );
         const text = container.textContent;
 
-        // Both team names present
-        expect(text).toContain(scores.home.name);
-        expect(text).toContain(scores.away.name);
+        // Both team names (abbreviation) present
+        expect(text).toContain(scores.home.abbreviation);
+        expect(text).toContain(scores.away.abbreviation);
 
         // Both scores present
         expect(text).toContain(String(scores.home.score));

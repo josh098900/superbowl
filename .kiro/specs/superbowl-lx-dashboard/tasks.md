@@ -116,29 +116,29 @@ Build the dashboard incrementally: project scaffolding → data layer (API + nor
     - Generate random PlayerStatsData with `fast-check`. Verify all stat categories appear for each position.
     - **Validates: Requirements 4.1, 4.2, 4.3**
 
-- [ ] 6. Checkpoint - Core components
+- [x] 6. Checkpoint - Core components
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Enhanced components: WinProbability, TeamStats, DriveTracker
-  - [ ] 7.1 Create `src/components/WinProbability.jsx`
+- [x] 7. Enhanced components: WinProbability, TeamStats, DriveTracker
+  - [x] 7.1 Create `src/components/WinProbability.jsx`
     - Render Recharts LineChart with two lines
     - X-axis: game time, Y-axis: win percentage 0–100
     - Seahawks line: #69BE28, Patriots line: #C60C30
     - Dark theme chart styling
     - _Requirements: 5.1, 5.3, 5.4_
 
-  - [ ] 7.2 Create `src/components/TeamStats.jsx`
+  - [x] 7.2 Create `src/components/TeamStats.jsx`
     - Render total yards, first downs, turnovers, 3rd down %, red zone %, time of possession
     - Side-by-side comparison layout with team colors
     - _Requirements: 6.1, 6.2_
 
-  - [ ] 7.3 Create `src/components/DriveTracker.jsx`
+  - [x] 7.3 Create `src/components/DriveTracker.jsx`
     - When drive is active: show play count, yards, time, down/distance, field position
     - When drive is complete: show drive outcome
     - When no drive data: show placeholder
     - _Requirements: 7.1, 7.2, 7.3_
 
-  - [ ]* 7.4 Write property tests: TeamStats and DriveTracker (Properties 9, 10, 11)
+  - [x] 7.4 Write property tests: TeamStats and DriveTracker (Properties 9, 10, 11)
     - **Property 9: Team stats display all required fields**
     - Generate random TeamStatsData. Verify all stat fields appear for both teams.
     - **Validates: Requirements 6.1, 6.2**
@@ -149,24 +149,24 @@ Build the dashboard incrementally: project scaffolding → data layer (API + nor
     - Generate random DriveData with isActive=false and non-null result. Verify outcome text appears.
     - **Validates: Requirements 7.3**
 
-- [ ] 8. Polish components: QuarterBreakdown, PredictionCard, PropTracker
-  - [ ] 8.1 Create `src/components/QuarterBreakdown.jsx`
+- [x] 8. Polish components: QuarterBreakdown, PredictionCard, PropTracker
+  - [x] 8.1 Create `src/components/QuarterBreakdown.jsx`
     - Render scoring by quarter for each team
     - Show quarter number and both teams' scores per quarter
     - _Requirements: 8.1_
 
-  - [ ] 8.2 Create `src/components/PredictionCard.jsx`
+  - [x] 8.2 Create `src/components/PredictionCard.jsx`
     - Display hardcoded predictions: Final score (SEA 27, NE 20), MVP (JSN), Total points (47), First TD (Charbonnet)
     - When game is not pregame, show actual values alongside predictions
     - Visual indicators for correct (green) / incorrect (red) / pending (gray)
     - _Requirements: 9.1, 9.2, 9.3_
 
-  - [ ] 8.3 Create `src/components/PropTracker.jsx`
+  - [x] 8.3 Create `src/components/PropTracker.jsx`
     - Track over/under 47.5 total points, longest play, total sacks, total turnovers
     - Compute values from game data props
     - _Requirements: 10.1, 10.2_
 
-  - [ ]* 8.4 Write property tests: QuarterBreakdown, PredictionCard, PropTracker (Properties 12, 14, 15)
+  - [x] 8.4 Write property tests: QuarterBreakdown, PredictionCard, PropTracker (Properties 12, 14, 15)
     - **Property 12: Quarter breakdown shows per-quarter scores**
     - Generate random QuarterScoreData. Verify each quarter's scores appear.
     - **Validates: Requirements 8.1**
@@ -177,8 +177,8 @@ Build the dashboard incrementally: project scaffolding → data layer (API + nor
     - Generate random game data. Verify all four prop tracker values appear.
     - **Validates: Requirements 10.1**
 
-- [ ] 9. App layout, responsive design, and error handling
-  - [ ] 9.1 Create `src/App.jsx`
+- [x] 9. App layout, responsive design, and error handling
+  - [x] 9.1 Create `src/App.jsx`
     - Wire `useGameData` hook
     - Pass data slices to all child components
     - Implement responsive grid layout with TailwindCSS: single column (<640px), 2-column (640–1024px), 3-column (≥1024px)
@@ -188,18 +188,18 @@ Build the dashboard incrementally: project scaffolding → data layer (API + nor
     - Sidebar area: TeamStats, PredictionCard, QuarterBreakdown, PropTracker
     - _Requirements: 11.1, 11.2, 11.3, 12.1_
 
-  - [ ] 9.2 Implement error handling UI
+  - [x] 9.2 Implement error handling UI
     - Show "Game not found" full-page message when event ID is null and not loading
     - Show subtle error indicator when `consecutiveErrors` is 1 or 2
     - Show prominent error banner when `consecutiveErrors` >= 3
     - _Requirements: 1.2, 14.1, 14.3_
 
-  - [ ]* 9.3 Write property test: Error banner threshold (Property 16)
+  - [x] 9.3 Write property test: Error banner threshold (Property 16)
     - **Property 16: Error banner on consecutive failures**
     - Generate random consecutiveErrors counts (0–20) with `fast-check`. Verify banner visible when >= 3, hidden when < 3.
     - **Validates: Requirements 14.3**
 
-- [ ] 10. Final checkpoint
+- [x] 10. Final checkpoint
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

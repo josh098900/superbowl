@@ -47,7 +47,7 @@ export default function PlayerStats({ playerStats }) {
 
 function ComparisonCard({ title, home, away, statLabels }) {
   return (
-    <div className="bg-slate-800/60 rounded-xl p-4">
+    <div className="card-glass rounded-xl p-4">
       <h3 className="text-sm font-bold text-gold-accent mb-3">{title}</h3>
       <div className="flex justify-between mb-2">
         <span className="text-seahawks-green font-semibold text-sm">
