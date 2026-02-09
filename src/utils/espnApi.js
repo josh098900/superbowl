@@ -157,7 +157,7 @@ export function normalizeGameData(rawData) {
   }));
 
   // Player stats
-  const playerStats = normalizePlayerStats(boxscore);
+  const playerStats = normalizePlayerStats(boxscore, homeComp, awayComp);
 
   // Team stats
   const teamStats = normalizeTeamStats(boxscore, homeComp, awayComp);
@@ -198,8 +198,10 @@ export function normalizeGameData(rawData) {
 
 /**
  * Extracts player stats from boxscore for QB, WR, RB comparisons.
+ * ESPN sometimes omits homeAway on boxscore.players, so we build a
+ * team→side lookup from the header competitors as a fallback.
  */
-function normalizePlayerStats(boxscore) {
+function normalizePlayerStats(boxscore, homeComp, awayComp) {
   const defaultLine = { name: 'N/A', team: '', headshot: '', position: '', stats: {} };
   const result = {
     qb: { home: { ...defaultLine }, away: { ...defaultLine } },
@@ -207,10 +209,16 @@ function normalizePlayerStats(boxscore) {
     rb: { home: { ...defaultLine }, away: { ...defaultLine } },
   };
 
+  // Build team abbreviation → side lookup from header competitors
+  const teamSideMap = {};
+  if (homeComp?.team?.abbreviation) teamSideMap[homeComp.team.abbreviation] = 'home';
+  if (awayComp?.team?.abbreviation) teamSideMap[awayComp.team.abbreviation] = 'away';
+
   const players = boxscore?.players || [];
   players.forEach((teamBlock) => {
     const teamAbbr = teamBlock.team?.abbreviation || '';
-    const side = teamBlock.homeAway === 'home' ? 'home' : 'away';
+    // Prefer homeAway field, fall back to matching team abbreviation
+    const side = teamBlock.homeAway || teamSideMap[teamAbbr] || 'home';
     const stats = teamBlock.statistics || [];
 
     stats.forEach((statGroup) => {
@@ -323,19 +331,26 @@ function normalizeTeamStats(boxscore, homeComp, awayComp) {
 
 /**
  * Extracts current drive data.
+ * Down/distance comes from the last play's `end` object (live situation),
+ * falling back to drive.start for the initial snap.
  */
 function normalizeDrive(drives) {
   const current = drives?.current;
   if (!current) return null;
 
+  // The current down/distance is on the last play's end (what's next)
+  const playsArr = current.plays || [];
+  const lastPlay = playsArr.length > 0 ? playsArr[playsArr.length - 1] : null;
+  const situation = lastPlay?.end || lastPlay?.start || current.start || {};
+
   return {
     team: current.team?.abbreviation || '',
-    plays: current.plays?.length || 0,
+    plays: playsArr.length || current.offensivePlays || 0,
     yards: current.yards || 0,
     timeElapsed: current.timeElapsed?.displayValue || '0:00',
-    down: current.start?.down || 0,
-    distance: current.start?.distance || 0,
-    yardLine: current.start?.yardLine || 0,
+    down: situation.down || 0,
+    distance: situation.distance || 0,
+    yardLine: situation.yardLine || 0,
     isActive: current.isComplete === false || current.isComplete === undefined,
     result: current.result || null,
   };
@@ -424,20 +439,28 @@ function normalizeGameInfo(rawData, competition) {
   const broadcast = broadcastNames[0] || '';
 
   // Leaders (pregame/live stat leaders)
+  // ESPN structure: leaders[] → per-team → .leaders[] → per-category → .leaders[] → per-player
   const leaders = [];
   const rawLeaders = rawData?.leaders || competition?.leaders || [];
-  rawLeaders.forEach((category) => {
-    const catName = category.name || category.displayName || '';
-    const topLeader = category.leaders?.[0];
-    if (topLeader) {
-      leaders.push({
-        category: catName,
-        name: topLeader.athlete?.displayName || topLeader.displayName || '',
-        team: topLeader.team?.abbreviation || '',
-        headshot: topLeader.athlete?.headshot?.href || topLeader.athlete?.headshot || '',
-        value: topLeader.displayValue || topLeader.value || '',
-      });
-    }
+  rawLeaders.forEach((teamBlock) => {
+    const teamAbbr = teamBlock.team?.abbreviation || '';
+    const categories = teamBlock.leaders || [];
+    categories.forEach((category) => {
+      const catName = category.name || category.displayName || '';
+      const catDisplayName = category.displayName || catName;
+      const deepLeaders = category.leaders || [];
+      const topLeader = deepLeaders[0];
+      if (topLeader) {
+        leaders.push({
+          category: catName,
+          displayName: catDisplayName,
+          name: topLeader.athlete?.displayName || topLeader.displayName || '',
+          team: teamAbbr,
+          headshot: topLeader.athlete?.headshot?.href || topLeader.athlete?.headshot || '',
+          value: topLeader.displayValue || topLeader.value || '',
+        });
+      }
+    });
   });
 
   // Attendance & officials
