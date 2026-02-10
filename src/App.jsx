@@ -19,6 +19,7 @@ import NewsCarousel from './components/NewsCarousel';
 import GameLeaders from './components/GameLeaders';
 import DriveHistory from './components/DriveHistory';
 import HelmetClash from './components/HelmetClash';
+import seahawksHelmet from './assets/seahawk.png';
 
 // Set to true after the season ends to stop all ESPN API calls
 const SEASON_OVER = true;
@@ -64,7 +65,39 @@ function ThankYouPage() {
           See you again next year at the SoFi 🏟️
         </motion.p>
 
-        <HelmetClash />
+        {/* Champion helmet */}
+        <motion.div
+          className="relative my-8"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1, type: 'spring' }}
+        >
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(105,190,40,0.3) 0%, rgba(105,190,40,0.05) 50%, transparent 70%)',
+            }}
+            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <img
+            src={seahawksHelmet}
+            alt="Seattle Seahawks - Super Bowl LX Champions"
+            className="w-60 h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 object-contain relative z-10"
+            style={{
+              filter: 'drop-shadow(0 0 30px rgba(105,190,40,0.5)) drop-shadow(0 0 60px rgba(105,190,40,0.2))',
+            }}
+          />
+        </motion.div>
+
+        <motion.p
+          className="text-lg md:text-xl font-bold text-seahawks-green"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.8 }}
+        >
+          🏆 Super Bowl LX Champions
+        </motion.p>
 
         <motion.p
           className="text-sm text-white/30 mt-8"
