@@ -20,7 +20,74 @@ import GameLeaders from './components/GameLeaders';
 import DriveHistory from './components/DriveHistory';
 import HelmetClash from './components/HelmetClash';
 
+// Set to true after the season ends to stop all ESPN API calls
+const SEASON_OVER = true;
+
+function ThankYouPage() {
+  return (
+    <div className="min-h-screen text-white relative overflow-hidden font-inter flex flex-col items-center justify-center">
+      <StadiumBackground />
+      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-2xl">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, type: 'spring' }}
+        >
+          <h1
+            className="text-5xl md:text-7xl font-bold mb-4 tracking-tight"
+            style={{
+              background: 'linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: 'drop-shadow(0 0 20px rgba(251,191,36,0.4))',
+            }}
+          >
+            Super Bowl LX
+          </h1>
+        </motion.div>
+
+        <motion.p
+          className="text-xl md:text-2xl text-white/80 mb-2"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          Thank you for using my dashboard
+        </motion.p>
+
+        <motion.p
+          className="text-lg md:text-xl text-white/50 mb-10"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        >
+          See you again next year at the SoFi 🏟️
+        </motion.p>
+
+        <HelmetClash />
+
+        <motion.p
+          className="text-sm text-white/30 mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 1 }}
+        >
+          Super Bowl LXI · SoFi Stadium · Inglewood, CA
+        </motion.p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
+  if (SEASON_OVER) {
+    return <ThankYouPage />;
+  }
+
+  return <Dashboard />;
+}
+
+function Dashboard() {
   const [showSplash, setShowSplash] = useState(true);
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
